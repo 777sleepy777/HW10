@@ -53,8 +53,8 @@ def add_quote(request):
             for tag in choice_tags.iterator():
                 new_note.tags.add(tag)
 
-            author = get_object_or_404(Author, fullname=request.POST.get('author'))
-            new_note.author = author
+            au = Author.objects.get(fullname=request.POST.get('author'))
+            au.quotes_set.add(new_note, bulk=False)
 
             return redirect(to='quotes:main')
         else:
