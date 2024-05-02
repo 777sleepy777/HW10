@@ -49,13 +49,13 @@ def add_quote(request):
         form = QuoteForm(request.POST)
         if form.is_valid():
             new_note = form.save()
-
             choice_tags = Tag.objects.filter(name__in=request.POST.getlist('tags'))
             for tag in choice_tags.iterator():
                 new_note.tags.add(tag)
-            choice_auths = Author.objects.filter(name__in=request.POST.getlist('auths'))
-            for auth in choice_auths.iterator():
-                new_note.authors.add(auth)
+
+            author = get_object_or_404(Author, fullname=request.POST.get('author'))
+            new_note.author = author
+
             return redirect(to='quotes:main')
         else:
             return render(request, 'quotes/note.html', {"tags": tags, "authors": auths, 'form': form})
